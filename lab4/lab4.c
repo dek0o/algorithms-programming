@@ -1,12 +1,6 @@
-#include "lab4.h"
+#include "functions.h"
 
-#include "minunit.h"
-#include "tests.c"
-
-int main() {
-    // Задание 1
-    MU_RUN_SUITE(test_suite);
-    MU_REPORT();
+int main(){
 
     // Задание 2
     int ar[SIZE_1N][SIZE_1M] = {{1, 2, 3}, {4, 5, 6}};

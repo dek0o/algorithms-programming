@@ -1,3 +1,5 @@
+#pragma once
+
 /*
  * Copyright (c) 2012 David Siñuela Pastor, siu.4coders@gmail.com
  * 

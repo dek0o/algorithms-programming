@@ -1,5 +1,5 @@
 #include "minunit.h"
-#include "lab4.h"
+#include "functions.h"
 
 // Задание 1 (творческое). swap
 // Напишите функцию swap(int *i, int *j), которая меняет значения двух ячеек местами.
@@ -69,4 +69,10 @@ MU_TEST_SUITE(test_suite) {
     MU_RUN_TEST(test_swap_small);
     MU_RUN_TEST(test_swap_positive_negative);
     MU_RUN_TEST(test_swap_max_int);
+}
+
+int main() {
+    // Задание 1
+    MU_RUN_SUITE(test_suite);
+    MU_REPORT();
 }
