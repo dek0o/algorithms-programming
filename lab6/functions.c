@@ -1,6 +1,6 @@
 #include "functions.h"
 
-void printBook(const struct Book *book) {
+void printBook(const Book *book) {
     if (book == NULL) {
         printf("Книга не найдена\n");
         return;
@@ -13,7 +13,7 @@ void printBook(const struct Book *book) {
     printf("\n");
 }
 
-void printCatalog(struct Book *catalog, int count) {
+void printCatalog(Book *catalog, int count) {
     if (count == 0) {
         printf("Картотека пуста.\n");
         return;
@@ -25,10 +25,10 @@ void printCatalog(struct Book *catalog, int count) {
     }
 }
 
-int addBook(struct Book **catalog, int *count, int *capacity, const struct Book *newBook) {
+int addBook(Book **catalog, int *count, int *capacity, const Book *newBook) {
     if (*count >= *capacity) {
         *capacity *= 2;
-        *catalog = realloc(*catalog, *capacity * sizeof(struct Book));
+        *catalog = realloc(*catalog, *capacity * sizeof(Book));
         if (*catalog == NULL) {
             return 0; // Не удалось выделить память
         }
@@ -38,7 +38,7 @@ int addBook(struct Book **catalog, int *count, int *capacity, const struct Book 
     return 1; // Успешно добавлено
 }
 
-int removeBook(struct Book *catalog, int *count, int index) {
+int removeBook(Book *catalog, int *count, int index) {
     if (index < 0 || index >= *count) {
         return 0; // Неверный индекс
     }
@@ -49,7 +49,7 @@ int removeBook(struct Book *catalog, int *count, int index) {
     return 1; // Успешно удалено
 }
 
-void saveCatalogToFile(const struct Book *catalog, int count, const char *filename) {
+void saveCatalogToFile(const Book *catalog, int count, const char *filename) {
     FILE *file = fopen(filename, "w");
     if (file == NULL) {
         printf("Ошибка открытия файла для записи.\n");
@@ -67,15 +67,19 @@ void saveCatalogToFile(const struct Book *catalog, int count, const char *filena
     fclose(file);
 }
 
-int loadCatalogFromFile(struct Book **catalog, int *count, int *capacity, const char *filename) {
+int loadCatalogFromFile(Book **catalog, int *count, int *capacity, const char *filename) {
     FILE *file = fopen(filename, "r");
     if (file == NULL) {
         return 0; // Файл не найден
     }
     fscanf(file, "%d\n", count);
+    if (*count == 0) {
+        fclose(file);
+        return 0; // Пустой файл
+    }
     if (*count > *capacity) {
         *capacity = *count;
-        *catalog = realloc(*catalog, *capacity * sizeof(struct Book));
+        *catalog = realloc(*catalog, *capacity * sizeof(Book));
         if (*catalog == NULL) {
             fclose(file);
             return 0; // Не удалось выделить память
@@ -95,7 +99,7 @@ int loadCatalogFromFile(struct Book **catalog, int *count, int *capacity, const 
     return 1; // Успешно загружено
 }
 
-int compareBooks(const struct Book *a, const struct Book *b, SortingType type) {
+int compareBooks(const Book *a, const Book *b, SortingType type) {
     switch (type) {
         case SORT_BY_AUTHOR:
             return strcmp(a->author, b->author);
@@ -114,11 +118,11 @@ int compareBooks(const struct Book *a, const struct Book *b, SortingType type) {
     }
 }
 
-void sortCatalog(struct Book *catalog, int count, SortingType type) {
+void sortCatalog(Book *catalog, int count, SortingType type) {
     for (int i = 0; i < count - 1; i++) {
         for (int j = 0; j < count - i - 1; j++) {
             if (compareBooks(&catalog[j], &catalog[j + 1], type) > 0) {
-                struct Book temp = catalog[j];
+                Book temp = catalog[j];
                 catalog[j] = catalog[j + 1];
                 catalog[j + 1] = temp;
             }
@@ -126,6 +130,6 @@ void sortCatalog(struct Book *catalog, int count, SortingType type) {
     }
 }
 
-void freeCatalog(struct Book *catalog) {
+void freeCatalog(Book *catalog) {
     free(catalog);
 }

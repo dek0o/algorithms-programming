@@ -26,7 +26,7 @@ int main()
     // по любому из полей структуры.
     // Замечание: признак "по какому полю сортируем" можно ввести с помощью перечисления
 
-    struct Book *catalog = malloc(INITIAL_CAPACITY * sizeof(struct Book));
+    Book *catalog = malloc(INITIAL_CAPACITY * sizeof(Book));
     if (catalog == NULL) {
         printf("Ошибка выделения памяти.\n");
         return 1;
@@ -55,7 +55,7 @@ int main()
                 printCatalog(catalog, count);
                 break;
             case 2: {
-                struct Book newBook;
+                Book newBook;
                 printf("Введите автора: ");
                 scanf(" %[^\n]", newBook.author);
                 printf("Введите название: ");
@@ -76,17 +76,25 @@ int main()
                 break;
             }
             case 3: {
+                if (count == 0) {
+                    printf("Невозможно провести операцию удаления: картотека пуста.\n");
+                    break;
+                }
                 int index;
                 printf("Введите индекс книги для удаления (0-%d): ", count - 1);
                 scanf("%d", &index);
                 if (removeBook(catalog, &count, index)) {
                     printf("Книга удалена.\n");
                 } else {
-                    printf("Не удалось удалить книгу.\n");
+                    printf("Ошибка: несуществующий индекс.\n");
                 }
                 break;
             }
             case 4:
+                if (count == 0) {
+                    printf("Невозможно провести операцию сохранения: картотека пуста.\n");
+                    break;
+                }
                 saveCatalogToFile(catalog, count, "catalog.txt");
                 printf("Картотека сохранена в файл.\n");
                 break;
@@ -94,10 +102,14 @@ int main()
                 if (loadCatalogFromFile(&catalog, &count, &capacity, "catalog.txt")) {
                     printf("Картотека загружена из файла.\n");
                 } else {
-                    printf("Не удалось загрузить картотеку.\n");
+                    printf("Не удалось загрузить картотеку. Возможно, файл пуст.\n");
                 }
                 break;
             case 6: {
+                if (count == 0) {
+                    printf("Невозможно провести операцию сортировки: картотека пуста.\n");
+                    break;
+                }
                 int sortChoice;
                 printf("Выберите поле для сортировки:\n");
                 printf("1. Автор\n");
