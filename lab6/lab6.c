@@ -68,7 +68,7 @@ int main()
                 scanf(" %[^\n]", newBook.category);
                 // Очистка буфера ввода
                 while (getchar() != '\n');
-                if (addBook(&catalog, &count, &capacity, &newBook)) {
+                if (!addBook(&catalog, &count, &capacity, &newBook)) {
                     printf("Книга добавлена.\n");
                 } else {
                     printf("Не удалось добавить книгу.\n");
@@ -83,7 +83,7 @@ int main()
                 int index;
                 printf("Введите индекс книги для удаления (0-%d): ", count - 1);
                 scanf("%d", &index);
-                if (removeBook(catalog, &count, index)) {
+                if (!removeBook(catalog, &count, index)) {
                     printf("Книга удалена.\n");
                 } else {
                     printf("Ошибка: несуществующий индекс.\n");
@@ -95,14 +95,17 @@ int main()
                     printf("Невозможно провести операцию сохранения: картотека пуста.\n");
                     break;
                 }
-                saveCatalogToFile(catalog, count, "catalog.txt");
-                printf("Картотека сохранена в файл.\n");
+                if (!saveCatalogToFile(catalog, count, "catalog.txt")) {
+                    printf("Картотека сохранена в файл.\n");
+                } else {
+                    printf("Не удалось сохранить картотеку.\n");
+                }
                 break;
             case 5:
-                if (loadCatalogFromFile(&catalog, &count, &capacity, "catalog.txt")) {
+                if (!loadCatalogFromFile(&catalog, &count, &capacity, "catalog.txt")) {
                     printf("Картотека загружена из файла.\n");
                 } else {
-                    printf("Не удалось загрузить картотеку. Возможно, файл пуст.\n");
+                    printf("Не удалось загрузить картотеку. Возможно, файл не найден или пуст.\n");
                 }
                 break;
             case 6: {

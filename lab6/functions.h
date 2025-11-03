@@ -14,11 +14,11 @@ typedef enum {
     SORT_BY_CATEGORY
 } SortingType;
 
-void printBook(const struct Book *book);
-void printCatalog(struct Book *catalog, int count);
-int addBook(struct Book **catalog, int *count, int *capacity, const struct Book *newBook);
-int removeBook(struct Book *catalog, int *count, int index);
-void saveCatalogToFile(const struct Book *catalog, int count, const char *filename);
-int loadCatalogFromFile(struct Book **catalog, int *count, int *capacity, const char *filename);
-void sortCatalog(struct Book *catalog, int count, SortingType field);
-void freeCatalog(struct Book *catalog);
+void printBook(const Book *book);
+void printCatalog(Book *catalog, int count);
+int addBook(Book **catalog, int *count, int *capacity, const Book *newBook);
+int removeBook(Book *catalog, int *count, int index);
+int saveCatalogToFile(const Book *catalog, int count, const char *filename);
+int loadCatalogFromFile(Book **catalog, int *count, int *capacity, const char *filename);
+void sortCatalog(Book *catalog, int count, SortingType field);
+void freeCatalog(Book *catalog);

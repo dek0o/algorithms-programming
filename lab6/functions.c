@@ -30,30 +30,30 @@ int addBook(Book **catalog, int *count, int *capacity, const Book *newBook) {
         *capacity *= 2;
         *catalog = realloc(*catalog, *capacity * sizeof(Book));
         if (*catalog == NULL) {
-            return 0; // Не удалось выделить память
+            return -1; // Не удалось выделить память
         }
     }
     (*catalog)[*count] = *newBook;
     (*count)++;
-    return 1; // Успешно добавлено
+    return 0; // Успешно добавлено
 }
 
 int removeBook(Book *catalog, int *count, int index) {
     if (index < 0 || index >= *count) {
-        return 0; // Неверный индекс
+        return -1; // Неверный индекс
     }
     for (int i = index; i < *count - 1; i++) {
         catalog[i] = catalog[i + 1];
     }
     (*count)--;
-    return 1; // Успешно удалено
+    return 0; // Успешно удалено
 }
 
-void saveCatalogToFile(const Book *catalog, int count, const char *filename) {
+int saveCatalogToFile(const Book *catalog, int count, const char *filename) {
     FILE *file = fopen(filename, "w");
     if (file == NULL) {
         printf("Ошибка открытия файла для записи.\n");
-        return;
+        return -1;
     }
     fprintf(file, "%d\n", count);
     for (int i = 0; i < count; i++) {
@@ -65,24 +65,25 @@ void saveCatalogToFile(const Book *catalog, int count, const char *filename) {
                 catalog[i].category);
     }
     fclose(file);
+    return 0;
 }
 
 int loadCatalogFromFile(Book **catalog, int *count, int *capacity, const char *filename) {
     FILE *file = fopen(filename, "r");
     if (file == NULL) {
-        return 0; // Файл не найден
+        return -1; // Файл не найден
     }
     fscanf(file, "%d\n", count);
     if (*count == 0) {
         fclose(file);
-        return 0; // Пустой файл
+        return -1; // Пустой файл
     }
     if (*count > *capacity) {
         *capacity = *count;
         *catalog = realloc(*catalog, *capacity * sizeof(Book));
         if (*catalog == NULL) {
             fclose(file);
-            return 0; // Не удалось выделить память
+            return -1; // Не удалось выделить память
         }
     }
     for (int i = 0; i < *count; i++) {
@@ -96,7 +97,7 @@ int loadCatalogFromFile(Book **catalog, int *count, int *capacity, const char *f
         (*catalog)[i].category[strcspn((*catalog)[i].category, "\n")] = '\0';
     }
     fclose(file);
-    return 1; // Успешно загружено
+    return 0; // Успешно загружено
 }
 
 int compareBooks(const Book *a, const Book *b, SortingType type) {
